@@ -921,10 +921,16 @@ textarea.input-field {
       <h1>Подрядчики</h1>
       <div class="subtitle">База исполнителей Sixth Sense Bureau</div>
     </div>
-    <button class="btn btn-gradient" onclick="openCreateModal()">
-      <i data-lucide="plus" width="16" height="16"></i>
-      Добавить подрядчика
-    </button>
+    <div style="display:flex;gap:0.75rem;">
+      <button class="btn btn-secondary" onclick="showArchive()">
+        <i data-lucide="archive" width="16" height="16"></i>
+        Архив
+      </button>
+      <button class="btn btn-gradient" onclick="openCreateModal()">
+        <i data-lucide="plus" width="16" height="16"></i>
+        Добавить подрядчика
+      </button>
+    </div>
   </div>
 
   <!-- Main Layout: Table + AI -->
@@ -969,13 +975,15 @@ textarea.input-field {
 
         <select id="filterStatus" class="input-field" style="max-width:240px;">
           <option value="">Все статусы</option>
-          <option value="Шорт-лист">Шорт-лист</option>
           <option value="На скоринге">На скоринге</option>
+          <option value="Шорт-лист">Шорт-лист</option>
           <option value="Первичный скоринг пройден">Первичный скоринг пройден</option>
-          <option value="В работе">В работе</option>
-          <option value="Одобрен">Одобрен</option>
+          <option value="Нужно запросить документы">Нужно запросить документы</option>
+          <option value="Документы получены">Документы получены</option>
           <option value="Готов к пресейлу">Готов к пресейлу</option>
-          <option value="Нужна постоценка">Нужна постоценка</option>
+          <option value="Согласован на пресейл">Согласован на пресейл</option>
+          <option value="На проекте / в работе">На проекте / в работе</option>
+          <option value="Нужна пост-оценка">Нужна пост-оценка</option>
         </select>
       </div>
 
@@ -984,11 +992,12 @@ textarea.input-field {
         <table class="contractor-table">
           <thead>
             <tr>
-              <th style="width:28%">ФИО</th>
-              <th style="width:20%">Специализация</th>
-              <th style="width:12%">Грейд</th>
-              <th style="width:18%">Тип подрядчика</th>
-              <th style="width:18%">Статус скоринга</th>
+              <th style="width:24%">ФИО</th>
+              <th style="width:16%">Специализация</th>
+              <th style="width:10%">Грейд</th>
+              <th style="width:14%">Тип подрядчика</th>
+              <th style="width:16%">Статус скоринга</th>
+              <th style="width:14%">Последняя коммуникация</th>
               <th style="width:40px"></th>
             </tr>
           </thead>
@@ -1131,6 +1140,7 @@ const contractors = [
     status: "Первичный скоринг пройден",
     managerTask: "Начать вторичный скоринг",
     createdAt: "2024-02-01",
+    lastCommunication: "2024-03-15",
     postEvaluation: {}
   },
   {
@@ -1150,9 +1160,10 @@ const contractors = [
     description: "Агентство полного цикла. Специализация — сложные веб-приложения и дизайн-системы.",
     resume: "#",
     portfolio: "https://futureui.dev",
-    status: "Одобрен",
+    status: "Готов к пресейлу",
     managerTask: "Подготовить контракт",
     createdAt: "2024-05-10",
+    lastCommunication: "2024-06-20",
     postEvaluation: {}
   },
   {
@@ -1172,9 +1183,10 @@ const contractors = [
     description: "Команда под growth-задачи: аналитика, эксперименты, воронки, гипотезы, CRM-маркетинг и перформанс.",
     resume: "#",
     portfolio: "—",
-    status: "Нужна постоценка",
+    status: "Нужна пост-оценка",
     managerTask: "Провести пост-оценку по проекту",
     createdAt: "2024-06-01",
+    lastCommunication: "2024-07-10",
     postEvaluation: {
       businessResult: "Хорошо",
       deadlines: "",
@@ -1203,6 +1215,7 @@ const contractors = [
     status: "На скоринге",
     managerTask: "",
     createdAt: "2025-03-15",
+    lastCommunication: "2025-03-20",
     postEvaluation: {}
   },
   {
@@ -1225,9 +1238,13 @@ const contractors = [
     status: "На скоринге",
     managerTask: "Проверить портфолио",
     createdAt: "2024-08-20",
+    lastCommunication: "2024-08-25",
     postEvaluation: {}
   }
 ];
+
+// Archive storage
+let archivedContractors = [];
 
 // ========== HELPERS ==========
 function isAgencyOrTeam(c) {
@@ -1252,15 +1269,17 @@ function getStatusClass(status) {
   const map = {
     "На скоринге": "scoring",
     "Шорт-лист": "shortlist",
-    "Шорт-лист / Стоплист": "shortlist",
-    "Одобрен": "approved",
-    "В работе": "active",
     "Первичный скоринг пройден": "pending",
     "Нужно запросить документы": "documents",
     "Документы получены": "documents",
     "Готов к пресейлу": "presale",
-    "Согласован на проект": "presale",
-    "Нужна постоценка": "posteval"
+    "Согласован на пресейл": "presale",
+    "На проекте / в работе": "active",
+    "В работе": "active",
+    "Нужна пост-оценка": "posteval",
+    "Нужна постоценка": "posteval",
+    "Шортлист": "shortlist",
+    "Архив": "archived"
   };
   return map[status] || "pending";
 }
@@ -1314,9 +1333,11 @@ function calculateCompletenessDetails(c) {
 }
 
 function isStale(c) {
-  if (!c.createdAt) return false;
-  const diffDays = Math.ceil(Math.abs(new Date() - new Date(c.createdAt)) / (1000 * 60 * 60 * 24));
-  return diffDays > 30 && c.status !== "В работе";
+  // Only show "Требует обновления" for contractors on "На скоринге" status
+  if (c.status !== "На скоринге") return false;
+  if (!c.lastCommunication) return true;
+  const diffDays = Math.ceil(Math.abs(new Date() - new Date(c.lastCommunication)) / (1000 * 60 * 60 * 24));
+  return diffDays > 30;
 }
 
 // ========== RENDER TABLE ==========
@@ -1325,13 +1346,18 @@ function renderTable(data) {
   tbody.innerHTML = '';
 
   if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Подрядчики не найдены</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Подрядчики не найдены</td></tr>`;
   }
 
   data.forEach(c => {
     const tr = document.createElement('tr');
     tr.className = 'contractor-row';
     tr.onclick = () => openModal(c.id);
+
+    // Format last communication date
+    const lastComm = c.lastCommunication 
+      ? new Date(c.lastCommunication).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      : '—';
 
     tr.innerHTML = `
       <td>
@@ -1348,6 +1374,7 @@ function renderTable(data) {
       <td style="text-transform:uppercase;font-size:0.75rem;font-weight:600;letter-spacing:0.03em;">${displayGrade(c)}</td>
       <td style="font-size:0.8rem;">${c.type}</td>
       <td><span class="status-tag ${getStatusClass(c.status)}">${c.status}</span></td>
+      <td style="font-size:0.75rem;color:var(--text-muted);">${lastComm}</td>
       <td style="text-align:center;"><i data-lucide="chevron-right" width="16" height="16" style="color:var(--text-muted);"></i></td>
     `;
 
@@ -1568,7 +1595,7 @@ function renderModal(c) {
     ? `<ul>${completeness.missing.map(item => `<li>${item}</li>`).join('')}</ul>`
     : `<div style="color:var(--accent-green);">Все ключевые поля заполнены</div>`;
 
-  const postEvaluationHtml = c.status === 'Нужна постоценка'
+  const postEvaluationHtml = (c.status === 'Нужна пост-оценка' || c.status === 'Нужна постоценка')
     ? renderPostEvaluationSection(c)
     : '';
 
@@ -1864,10 +1891,16 @@ function renderPostEvaluationSection(c) {
         Пост-оценка подрядчика
       </div>
       <div class="post-eval-subtitle">
-        Этот блок появляется, когда подрядчик находится на этапе «Нужна постоценка».
+        Этот блок появляется, когда подрядчик находится на этапе «Нужна пост-оценка».
       </div>
       <div class="eval-grid">
         ${rows}
+      </div>
+      <div style="margin-top:1.5rem;display:flex;gap:0.75rem;">
+        <button class="btn btn-primary" onclick="moveToArchive(${c.id})">
+          <i data-lucide="archive" width="16" height="16"></i>
+          Перенести в архив
+        </button>
       </div>
     </div>
   `;
@@ -1878,6 +1911,117 @@ function setPostEvaluation(key, value) {
   if (!currentContractor.postEvaluation) currentContractor.postEvaluation = {};
   currentContractor.postEvaluation[key] = value;
   showToast('Оценка сохранена', 'success');
+}
+
+function moveToArchive(contractorId) {
+  const contractor = contractors.find(c => c.id === contractorId);
+  if (!contractor) return;
+  
+  // Move to archive
+  archivedContractors.push({
+    ...contractor,
+    archivedAt: new Date().toISOString()
+  });
+  
+  // Remove from active contractors
+  const index = contractors.findIndex(c => c.id === contractorId);
+  if (index > -1) {
+    contractors.splice(index, 1);
+  }
+  
+  closeModal();
+  applyFilters();
+  showToast('Подрядчик перенесён в архив', 'success');
+}
+
+function showArchive() {
+  const modal = document.getElementById('modalContent');
+  
+  if (archivedContractors.length === 0) {
+    modal.innerHTML = `
+      <div class="modal-header">
+        <h2>Архив подрядчиков</h2>
+        <button class="modal-close" onclick="closeModal()">
+          <i data-lucide="x" width="18" height="18"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:2rem;text-align:center;color:var(--text-muted);">
+        <i data-lucide="archive" width="48" height="48" style="opacity:0.3;margin-bottom:1rem;"></i>
+        <p>Архив пуст</p>
+      </div>
+    `;
+    lucide.createIcons();
+    document.getElementById('contractorModal').classList.add('is-visible');
+    return;
+  }
+  
+  const rows = archivedContractors.map(c => `
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          ${c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--accent-purple);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;">${c.name.charAt(0)}</div>`}
+          <span>${c.name}</span>
+        </div>
+      </td>
+      <td style="padding:0.75rem;font-size:0.8rem;">${c.spec}</td>
+      <td style="padding:0.75rem;"><span class="status-tag archived">Архив</span></td>
+      <td style="padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">${c.archivedAt ? new Date(c.archivedAt).toLocaleDateString('ru-RU') : '—'}</td>
+      <td style="padding:0.75rem;">
+        <button class="btn-icon" onclick="restoreFromArchive(${c.id})" title="Восстановить">
+          <i data-lucide="rotate-ccw" width="16" height="16"></i>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+  
+  modal.innerHTML = `
+    <div class="modal-header">
+      <h2>Архив подрядчиков</h2>
+      <button class="modal-close" onclick="closeModal()">
+        <i data-lucide="x" width="18" height="18"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">ФИО</th>
+            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Специализация</th>
+            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Статус</th>
+            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Дата архивации</th>
+            <th style="width:50px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+  `;
+  
+  lucide.createIcons();
+  document.getElementById('contractorModal').classList.add('is-visible');
+}
+
+function restoreFromArchive(contractorId) {
+  const contractor = archivedContractors.find(c => c.id === contractorId);
+  if (!contractor) return;
+  
+  // Remove archived data
+  const { archivedAt, ...rest } = contractor;
+  
+  // Add back to active contractors
+  contractors.push(rest);
+  
+  // Remove from archive
+  const index = archivedContractors.findIndex(c => c.id === contractorId);
+  if (index > -1) {
+    archivedContractors.splice(index, 1);
+  }
+  
+  showArchive();
+  applyFilters();
+  showToast('Подрядчик восстановлен из архива', 'success');
 }
 
 // ========== CREATE MODAL ==========
