@@ -3,56 +3,95 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ExtraCortex — Подрядчики</title>
+<title>6Sns — Подрядчики</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
 /* ==================== RESET & VARIABLES ==================== */
 :root {
+  color-scheme: light dark;
+  --bg-page: #ffffff;
+  --bg-card: #f8f8f8;
+  --bg-card-hover: #f0f0f0;
+  --bg-input: #f0f0f0;
+  --bg-hover: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.08);
+  --border-focus: rgba(255, 87, 34, 0.5);
+  --accent: #ff5722;
+  --accent-blue: #3686FF;
+  --accent-green: #22c55e;
+  --accent-yellow: #eab308;
+  --accent-red: #ef4444;
+  --accent-purple: #8b5cf6;
+  --text: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --gradient-start: #ff5722;
+  --gradient-end: #8b5cf6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #0d0f14;
+    --bg-card: #16181d;
+    --bg-card-hover: #1c1e24;
+    --bg-input: #1a1c22;
+    --bg-hover: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+    --border-focus: rgba(255, 87, 34, 0.5);
+    --text: #e2e2e2;
+    --text-secondary: #a1a1aa;
+    --text-muted: #6b6b76;
+  }
+}
+
+html.light-theme {
+  --bg-page: #ffffff;
+  --bg-card: #f8f8f8;
+  --bg-card-hover: #f0f0f0;
+  --bg-input: #f0f0f0;
+  --bg-hover: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.08);
+  --text: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+}
+
+html.dark-theme {
   --bg-page: #0d0f14;
   --bg-card: #16181d;
   --bg-card-hover: #1c1e24;
   --bg-input: #1a1c22;
   --bg-hover: rgba(255,255,255,0.03);
   --border: rgba(255,255,255,0.08);
-  --border-focus: rgba(54,134,255,0.5);
-  --accent: #DD1FFF;
-  --accent-blue: #3686FF;
-  --accent-green: #22c55e;
-  --accent-yellow: #eab308;
-  --accent-red: #ef4444;
-  --accent-purple: #a855f7;
   --text: #e2e2e2;
   --text-secondary: #a1a1aa;
   --text-muted: #6b6b76;
-  --gradient-start: #DD1FFF;
-  --gradient-end: #3686FF;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--bg-page);
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
   min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 a { color: var(--accent-blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ==================== SCROLLBAR ==================== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-/* ==================== LAYOUT ==================== */
 .page-wrapper {
   max-width: 1600px;
   margin: 0 auto;
@@ -70,14 +109,37 @@ a:hover { text-decoration: underline; }
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.025em;
-  color: #fff;
+  color: var(--accent);
   margin-bottom: 0.25rem;
 }
 
 .page-header .subtitle {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+.header-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .main-layout {
@@ -87,7 +149,6 @@ a:hover { text-decoration: underline; }
   align-items: start;
 }
 
-/* ==================== BUTTONS ==================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -119,8 +180,8 @@ a:hover { text-decoration: underline; }
   color: var(--text);
 }
 .btn-ghost:hover {
-  border-color: var(--accent-blue);
-  background: rgba(54,134,255,0.08);
+  border-color: var(--accent);
+  background: rgba(255,87,34,0.08);
 }
 
 .btn-danger {
@@ -133,16 +194,25 @@ a:hover { text-decoration: underline; }
   border-color: var(--accent-red);
 }
 
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: rgba(255,87,34,0.08);
+}
+
 .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
 .btn-full { width: 100%; justify-content: center; }
 
-/* ==================== INPUTS ==================== */
 .input-field {
   background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.55rem 0.75rem;
-  color: #fff;
+  color: var(--text);
   font-family: inherit;
   font-size: 0.85rem;
   width: 100%;
@@ -154,14 +224,10 @@ a:hover { text-decoration: underline; }
 select.input-field {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6b76' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' stroke='currentColor' stroke-width='2' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   padding-right: 2rem;
-}
-select.input-field option {
-  background: var(--bg-card);
-  color: #fff;
 }
 
 textarea.input-field {
@@ -170,7 +236,6 @@ textarea.input-field {
   line-height: 1.6;
 }
 
-/* ==================== TABLE ==================== */
 .table-wrapper {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -193,18 +258,18 @@ textarea.input-field {
   letter-spacing: 0.05em;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
-  background: rgba(0,0,0,0.15);
+  background: var(--bg-hover);
   white-space: nowrap;
 }
 
 .contractor-table tbody td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-  font-size: 0.85rem;
-  min-width: 0;
-}
-
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    font-size: 0.85rem;
+    min-width: 0;
+    color: var(--text);
+  }
 .contractor-table tbody tr:last-child td { border-bottom: none; }
 
 .contractor-row {
@@ -213,13 +278,13 @@ textarea.input-field {
 }
 .contractor-row:hover { background: var(--bg-hover); }
 
-/* FIX FIO ALIGNMENT */
 .name-cell-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
   max-width: 100%;
+  flex-wrap: wrap;
 }
 
 .list-avatar {
@@ -235,7 +300,7 @@ textarea.input-field {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,87,34,0.1);
   font-size: 0.7rem;
   color: var(--text-muted);
 }
@@ -245,11 +310,11 @@ textarea.input-field {
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  color: #fff;
+  color: var(--text);
   min-width: 0;
+  flex: 1 1 auto;
 }
 
-/* ==================== STATUS TAGS ==================== */
 .status-tag {
   display: inline-flex;
   align-items: center;
@@ -270,9 +335,7 @@ textarea.input-field {
 .status-tag.documents    { background: rgba(249,115,22,0.12); color: #fb923c; }
 .status-tag.presale      { background: rgba(14,165,233,0.12); color: #38bdf8; }
 .status-tag.posteval     { background: rgba(239,68,68,0.12); color: #f87171; }
-.status-tag.negotiation  { background: rgba(168,85,247,0.12); color: #c084fc; }
 
-/* ==================== GRADE ==================== */
 .grade-agreement {
   display: inline-flex;
   align-items: center;
@@ -299,14 +362,13 @@ textarea.input-field {
   color: var(--text-secondary);
 }
 
-/* ==================== AI ASSISTANT BLOCK ==================== */
 .ai-sidebar {
   position: sticky;
   top: 2rem;
 }
 
 .ai-block {
-  background: linear-gradient(135deg, rgba(54,134,255,0.08), rgba(221,31,255,0.08));
+  background: linear-gradient(135deg, rgba(255,87,34,0.08), rgba(139,92,246,0.08));
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1.25rem;
@@ -322,6 +384,7 @@ textarea.input-field {
 .ai-block-header h3 {
   font-size: 0.9rem;
   font-weight: 600;
+  color: var(--text);
 }
 
 .ai-block p {
@@ -332,7 +395,7 @@ textarea.input-field {
 }
 
 .ai-chat-area {
-  background: rgba(0,0,0,0.25);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.75rem;
@@ -369,7 +432,7 @@ textarea.input-field {
 }
 
 .ai-suggestion {
-  background: rgba(255,255,255,0.04);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   padding: 0.4rem 0.65rem;
@@ -381,12 +444,11 @@ textarea.input-field {
   font-family: inherit;
 }
 .ai-suggestion:hover {
-  border-color: var(--accent-blue);
-  color: var(--accent-blue);
-  background: rgba(54,134,255,0.06);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255,87,34,0.06);
 }
 
-/* ==================== MODAL ==================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -408,7 +470,7 @@ textarea.input-field {
   width: 1100px;
   max-width: 100%;
   padding: 2rem;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
   animation: modalIn 0.25s ease-out;
   margin: auto 0;
 }
@@ -444,7 +506,7 @@ textarea.input-field {
 .modal-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.25rem;
 }
 
@@ -488,12 +550,13 @@ textarea.input-field {
   align-items: center;
   gap: 0.6rem;
   font-size: 0.85rem;
+  color: var(--text);
 }
 .contact-item i { color: var(--text-muted); flex-shrink: 0; }
 .contact-item a { color: var(--accent-blue); }
 
 .info-block {
-  background: rgba(0,0,0,0.2);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.85rem;
@@ -509,6 +572,7 @@ textarea.input-field {
 .info-block-content {
   font-size: 0.85rem;
   line-height: 1.6;
+  color: var(--text);
 }
 
 .divider {
@@ -537,13 +601,12 @@ textarea.input-field {
 .manager-task-text {
   font-size: 0.85rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--text);
 }
 
-/* Reminder */
 .reminder-section { display: flex; flex-direction: column; gap: 0.5rem; }
 .reminder-panel {
-  background: rgba(0,0,0,0.25);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.75rem;
@@ -560,7 +623,7 @@ textarea.input-field {
   gap: 0.75rem;
 }
 .detail-item {
-  background: rgba(0,0,0,0.15);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.7rem 0.85rem;
@@ -575,14 +638,47 @@ textarea.input-field {
 }
 .detail-item-value {
   font-size: 0.85rem;
-  color: #fff;
+  color: var(--text);
   font-weight: 500;
 }
 .detail-item-value.yes { color: var(--accent-green); }
 .detail-item-value.no  { color: var(--accent-red); }
 .detail-item-value.zero-exp { color: var(--accent-red); font-weight: 700; }
 
-/* Status dropdown */
+.editable-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editable-field-value {
+  flex: 1;
+}
+
+.edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-btn:hover { color: var(--accent); }
+
+.editable-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border-focus);
+  border-radius: 0.375rem;
+  padding: 0.4rem 0.6rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  width: 100%;
+}
+
 .status-dropdown-wrap { position: relative; }
 .status-dropdown-btn {
   display: inline-flex;
@@ -609,7 +705,7 @@ textarea.input-field {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   min-width: 260px;
   display: none;
   overflow: hidden;
@@ -631,14 +727,13 @@ textarea.input-field {
 }
 .status-option:hover { background: var(--bg-hover); }
 .status-option.active {
-  background: rgba(54,134,255,0.1);
-  color: var(--accent-blue);
+  background: rgba(255,87,34,0.1);
+  color: var(--accent);
   font-weight: 600;
 }
 
-/* Description */
 .description-box {
-  background: rgba(0,0,0,0.15);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1rem;
@@ -647,10 +742,9 @@ textarea.input-field {
   color: var(--text-secondary);
 }
 
-/* ==================== COMPLETENESS ==================== */
 .completeness-card {
   position: relative;
-  background: rgba(0,0,0,0.15);
+  background: var(--bg-hover);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1rem;
@@ -665,7 +759,7 @@ textarea.input-field {
 
 .completeness-fill {
   height: 100%;
-  background: var(--accent-blue);
+  background: var(--accent);
 }
 
 .missing-tooltip {
@@ -673,11 +767,11 @@ textarea.input-field {
   left: 0;
   bottom: calc(100% + 8px);
   width: 280px;
-  background: #11141a;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.75rem;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
   display: none;
   z-index: 20;
   font-size: 0.78rem;
@@ -690,7 +784,7 @@ textarea.input-field {
 
 .missing-tooltip-title {
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 
@@ -702,7 +796,6 @@ textarea.input-field {
   margin-bottom: 0.2rem;
 }
 
-/* ==================== POST EVALUATION ==================== */
 .post-eval-section {
   background: rgba(239,68,68,0.06);
   border: 1px solid rgba(239,68,68,0.18);
@@ -716,7 +809,7 @@ textarea.input-field {
   gap: 0.5rem;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.35rem;
 }
 
@@ -752,7 +845,61 @@ textarea.input-field {
   font-size: 0.78rem;
 }
 
-/* ==================== TASK TRACKER ==================== */
+.post-eval-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.post-eval-actions .btn {
+  flex: 1;
+}
+
+.post-eval-results {
+  background: rgba(139,92,246,0.06);
+  border: 1px solid rgba(139,92,246,0.18);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.post-eval-results-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+  margin-bottom: 0.75rem;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.result-item {
+  background: rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.result-item-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.result-item-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-purple);
+}
+
 .task-tracker-section h3 {
   font-size: 1rem;
   font-weight: 600;
@@ -760,6 +907,7 @@ textarea.input-field {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: var(--text);
 }
 
 .task-columns {
@@ -769,7 +917,7 @@ textarea.input-field {
 }
 
 .task-column {
-  background: rgba(0,0,0,0.2);
+  background: var(--bg-hover);
   border-radius: 0.75rem;
   padding: 0.75rem;
   min-height: 180px;
@@ -786,10 +934,11 @@ textarea.input-field {
 .task-col-header span:first-child {
   font-size: 0.8rem;
   font-weight: 600;
+  color: var(--text);
 }
 .task-col-count {
   font-size: 0.7rem;
-  background: rgba(255,255,255,0.06);
+  background: var(--bg-hover);
   padding: 1px 8px;
   border-radius: 999px;
   color: var(--text-muted);
@@ -806,14 +955,14 @@ textarea.input-field {
 }
 .task-card:hover {
   background: var(--bg-card-hover);
-  border-color: rgba(255,255,255,0.12);
+  border-color: var(--border);
 }
 .task-card:last-child { margin-bottom: 0; }
 
 .task-card-title {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 0.4rem;
 }
 .task-card-meta {
@@ -850,7 +999,75 @@ textarea.input-field {
   padding: 0.35rem 2rem 0.35rem 0.65rem;
 }
 
-/* ==================== FOOTER ==================== */
+.archive-reason-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  padding: 2rem;
+}
+.archive-reason-modal.open { display: flex; }
+
+.archive-reason-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  width: 400px;
+  max-width: 100%;
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+  animation: modalIn 0.25s ease-out;
+}
+
+.archive-reason-box h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.reason-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.reason-option {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.reason-option:hover {
+  border-color: var(--accent);
+  background: rgba(255,87,34,0.06);
+}
+
+.reason-option.selected {
+  background: rgba(255,87,34,0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.archive-reason-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.archive-reason-actions button {
+  flex: 1;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -860,7 +1077,6 @@ textarea.input-field {
   margin-top: 1.5rem;
 }
 
-/* ==================== TOAST ==================== */
 .toast-container {
   position: fixed;
   bottom: 2rem;
@@ -877,7 +1093,7 @@ textarea.input-field {
   padding: 0.75rem 1rem;
   font-size: 0.8rem;
   color: var(--text);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -893,7 +1109,6 @@ textarea.input-field {
   to { transform: translateX(0); opacity: 1; }
 }
 
-/* ==================== RESPONSIVE ==================== */
 @media (max-width: 1200px) {
   .main-layout { grid-template-columns: 1fr; }
   .ai-sidebar { position: static; }
@@ -903,6 +1118,7 @@ textarea.input-field {
 @media (max-width: 768px) {
   .page-wrapper { padding: 1rem; }
   .detail-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; }
   .task-columns { grid-template-columns: 1fr; }
   .eval-row { grid-template-columns: 1fr; }
   .contractor-table { font-size: 0.78rem; }
@@ -918,10 +1134,13 @@ textarea.input-field {
   <!-- Header -->
   <div class="page-header">
     <div>
-      <h1>Подрядчики</h1>
+      <h1>6Sns — Подрядчики</h1>
       <div class="subtitle">База исполнителей Sixth Sense Bureau</div>
     </div>
-    <div style="display:flex;gap:0.75rem;">
+    <div class="header-controls">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему">
+        <i data-lucide="moon" width="18" height="18"></i>
+      </button>
       <button class="btn btn-secondary" onclick="showArchive()">
         <i data-lucide="archive" width="16" height="16"></i>
         Архив
@@ -1008,14 +1227,14 @@ textarea.input-field {
       </div>
 
       <!-- Results count -->
-      <div id="resultsCount" style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;"></div>
+      <div id="resultsCount" style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-muted);"></div>
     </div>
 
     <!-- RIGHT: AI Assistant -->
     <div class="ai-sidebar">
       <div class="ai-block">
         <div class="ai-block-header">
-          <i data-lucide="sparkles" width="18" height="18" style="color:var(--accent-blue)"></i>
+          <i data-lucide="sparkles" width="18" height="18" style="color:var(--accent)"></i>
           <h3>AI Ассистент</h3>
         </div>
         <p>Задайте вопрос, и я подберу подрядчиков по заданным критериям.</p>
@@ -1033,13 +1252,13 @@ textarea.input-field {
 
         <div class="ai-suggestions">
           <button class="ai-suggestion" onclick="applySuggestion('Пришли шортлист подрядчиков по брендингу')">
-            «Пришли шортлист подрядчиков по брендингу»
+            «Пришли шортлист подрядчиков»
           </button>
           <button class="ai-suggestion" onclick="applySuggestion('Покажи всех Senior подрядчиков')">
-            «Покажи всех Senior подрядчиков»
+            «Покажи всех Senior»
           </button>
           <button class="ai-suggestion" onclick="applySuggestion('Кто готов к пресейлу?')">
-            «Кто готов к пресейлу?»
+            «Готов к пресейлу?»
           </button>
         </div>
       </div>
@@ -1055,231 +1274,199 @@ textarea.input-field {
   </div>
 </div>
 
+<!-- ==================== ARCHIVE REASON MODAL ==================== -->
+<div class="archive-reason-modal" id="archiveReasonModal" onclick="if(event.target===this)closeArchiveReasonModal()">
+  <div class="archive-reason-box">
+    <h3>Причина архивации</h3>
+    <div class="reason-options" id="reasonOptions">
+      <!-- Options rendered by JS -->
+    </div>
+    <div class="archive-reason-actions">
+      <button class="btn btn-ghost" onclick="closeArchiveReasonModal()">Отмена</button>
+      <button class="btn btn-gradient" onclick="confirmArchiveWithReason()">Архивировать</button>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== TOASTS ==================== -->
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+// ========== THEME MANAGEMENT ==========
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  } else if (prefersDark) {
+    applyTheme('dark');
+  }
+}
+
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.classList.remove('dark-theme');
+    document.documentElement.classList.add('light-theme');
+  } else {
+    document.documentElement.classList.remove('light-theme');
+    document.documentElement.classList.add('dark-theme');
+  }
+  localStorage.setItem('theme', theme);
+  updateThemeToggleIcon();
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains('dark-theme');
+  applyTheme(isDark ? 'light' : 'dark');
+}
+
+function updateThemeToggleIcon() {
+  const isDark = document.documentElement.classList.contains('dark-theme');
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.innerHTML = isDark 
+      ? '<i data-lucide="sun" width="18" height="18"></i>'
+      : '<i data-lucide="moon" width="18" height="18"></i>';
+    lucide.createIcons();
+  }
+}
+
 // ========== CONSTANTS ==========
 const SPECIALIZATIONS = [
-  'Дизайн и айдентика',
-  'Таргетированная реклама',
-  'Контекстная реклама',
-  'Инфлюенс-маркетинг',
-  'SEO',
-  'Контент-маркетинг',
-  'Копирайтинг',
-  'Брендинг',
-  'Креативная стратегия',
-  'UX/UI дизайн',
-  'Web-разработка',
-  'No-code разработка',
-  'Исследования рынка',
-  'Видео-продакшен',
-  'PR и коммуникации',
-  'Growth маркетинг',
-  'Маркетинговая стратегия'
+  'Дизайн и айдентика', 'Таргетированная реклама', 'Контекстная реклама', 'Инфлюенс-маркетинг',
+  'SEO', 'Контент-маркетинг', 'Копирайтинг', 'Брендинг', 'Креативная стратегия', 'UX/UI дизайн',
+  'Web-разработка', 'No-code разработка', 'Исследования рынка', 'Видео-продакшен',
+  'PR и коммуникации', 'Growth маркетинг', 'Маркетинговая стратегия'
 ];
 
-const REVIEW_MANAGERS = [
-  'Анна Махова',
-  'Арина Зотова',
-  'Владимир Мотин',
-  'Андрей Сагин',
-  'Дмитрий Пащенко'
+const REVIEW_MANAGERS = ['Анна Махова', 'Арина Зотова', 'Владимир Мотин', 'Андрей Сагин', 'Дмитрий Пащенко'];
+
+const ARCHIVE_REASONS = [
+  'Отказался от сотрудничества',
+  'Не выходит на связь',
+  'Несоответствие квалификации',
+  'Зарплатные ожидания',
+  'График работы'
 ];
 
 const POST_EVALUATION_CRITERIA = [
-  {
-    key: 'businessResult',
-    label: 'Был ориентирован на бизнес-результат, где это актуально'
-  },
-  {
-    key: 'deadlines',
-    label: 'Соблюдает сроки договоренностей'
-  },
-  {
-    key: 'communication',
-    label: 'Коммуникационные навыки'
-  },
-  {
-    key: 'clientExpectations',
-    label: 'Интересуется ожиданием клиента от результата'
-  },
-  {
-    key: 'initiative',
-    label: 'Инициативен'
-  }
+  { key: 'businessResult', label: 'Был ориентирован на бизнес-результат' },
+  { key: 'deadlines', label: 'Соблюдает сроки договоренностей' },
+  { key: 'communication', label: 'Коммуникационные навыки' },
+  { key: 'clientExpectations', label: 'Интересуется ожиданием клиента' },
+  { key: 'initiative', label: 'Инициативен' }
 ];
 
-const EVALUATION_OPTIONS = [
-  'Отлично',
-  'Хорошо',
-  'Удовлетворительно',
-  'Не удовлетворительно'
-];
+const EVALUATION_OPTIONS = ['Отлично', 'Хорошо', 'Удовлетворительно', 'Не удовлетворительно'];
+
+const TASKS_BY_STATUS = {
+  'На скоринге': [
+    { title: 'Посмотреть портфолио', daysOffset: 1 },
+    { title: 'Назначить звонок', daysOffset: 2 },
+    { title: 'Отправить запрос слотов на ближайшую неделю', daysOffset: 3 },
+    { title: 'Отправить презентацию по онбордингу', daysOffset: 5 }
+  ],
+  'Нужно запросить документы': [
+    { title: 'Запросить документы (NDA + рамочный договор)', daysOffset: 1 }
+  ]
+};
 
 // ========== CONTRACTOR DATA ==========
 const contractors = [
   {
-    id: 1,
-    name: "Иван Иванов",
-    photo: "https://img.freepik.com/free-photo/bearded-man-suit-posing-with-crossed-arms_171337-18592.jpg?semt=ais_hybrid&w=740&q=80",
-    phone: "+7 993 639 14 80",
-    telegram: "@ivanivanov",
-    grade: "Senior",
-    gradeAgreement: true,
-    type: "Самостоятельный специалист",
-    spec: "Брендинг",
-    experience: "7 лет",
-    clientType: "Крупные компании",
-    role: "Руководитель проекта",
-    openEnded: "Да",
-    description: "Опытный специалист в области брендинга с 7-летним стажем. Работал с крупными компаниями над разработкой айдентики, брендбуков и стратегий позиционирования. Берётся за open-ended задачи, умеет самостоятельно структурировать работу и вести проекты от концепции до финального результата.",
-    resume: "https://drive.google.com/file/d/1-ixg5sb0XlFdghUW4tuipK67hW3gcjbh/view?usp=sharing",
-    portfolio: "—",
-    status: "Первичный скоринг пройден",
-    managerTask: "Начать вторичный скоринг",
-    createdAt: "2024-02-01",
-    lastCommunication: "2024-03-15",
-    postEvaluation: {}
+    id: 1, name: "Иван Иванов", photo: "https://img.freepik.com/free-photo/bearded-man-suit-posing-with-crossed-arms_171337-18592.jpg?w=740&q=80",
+    phone: "+7 993 639 14 80", telegram: "@ivanivanov", grade: "Senior", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Брендинг", experience: "7 лет", clientType: "Крупные компании",
+    role: "Руководитель проекта", openEnded: "Да", description: "Опытный специалист в области брендинга с 7-летним стажем.",
+    resume: "https://drive.google.com", portfolio: "—", status: "На скоринге", managerTask: "Проверить портфолио",
+    createdAt: "2024-02-01", lastCommunication: "2024-06-20", postEvaluation: {}, archiveReason: null
   },
   {
-    id: 2,
-    name: "Студия Future UI",
-    photo: "",
-    phone: "+7 916 123-45-67",
-    telegram: "@future_ui_bot",
-    grade: "N/A",
-    gradeAgreement: null,
-    type: "Агенство",
-    spec: "Web-разработка",
-    experience: "12 лет",
-    clientType: "Международные бренды",
-    role: "Руководитель юнита",
-    openEnded: "Да",
-    description: "Агентство полного цикла. Специализация — сложные веб-приложения и дизайн-системы.",
-    resume: "#",
-    portfolio: "https://futureui.dev",
-    status: "Готов к пресейлу",
-    managerTask: "Подготовить контракт",
-    createdAt: "2024-05-10",
-    lastCommunication: "2024-06-20",
-    postEvaluation: {}
+    id: 2, name: "Студия Future UI", photo: "",
+    phone: "+7 916 123-45-67", telegram: "@future_ui_bot", grade: "N/A", gradeAgreement: null,
+    type: "Агенство", spec: "Web-разработка", experience: "12 лет", clientType: "Международные бренды",
+    role: "Руководитель юнита", openEnded: "Да", description: "Агентство полного цикла. Специализация — сложные веб-приложения.",
+    resume: "#", portfolio: "https://futureui.dev", status: "Готов к пресейлу", managerTask: "Подготовить контракт",
+    createdAt: "2024-05-10", lastCommunication: "2024-06-15", postEvaluation: {}, archiveReason: null
   },
   {
-    id: 3,
-    name: "Петров Сергей",
-    photo: "",
-    phone: "+7 903 555-55-55",
-    telegram: "@spetrov_work",
-    grade: "N/A",
-    gradeAgreement: null,
-    type: "Проектная команда",
-    spec: "Growth маркетинг",
-    experience: "7 лет",
-    clientType: "Крупные компании",
-    role: "Руководитель проекта",
-    openEnded: "Иногда",
-    description: "Команда под growth-задачи: аналитика, эксперименты, воронки, гипотезы, CRM-маркетинг и перформанс.",
-    resume: "#",
-    portfolio: "—",
-    status: "Нужна пост-оценка",
-    managerTask: "Провести пост-оценку по проекту",
-    createdAt: "2024-06-01",
-    lastCommunication: "2024-07-10",
-    postEvaluation: {
-      businessResult: "Хорошо",
-      deadlines: "",
-      communication: "",
-      clientExpectations: "",
-      initiative: ""
-    }
+    id: 3, name: "Петров Сергей", photo: "",
+    phone: "+7 903 555-55-55", telegram: "@spetrov_work", grade: "N/A", gradeAgreement: null,
+    type: "Проектная команда", spec: "Growth маркетинг", experience: "7 лет", clientType: "Крупные компании",
+    role: "Руководитель проекта", openEnded: "Иногда", description: "Команда под growth-задачи: аналитика, эксперименты.",
+    resume: "#", portfolio: "—", status: "Нужна пост-оценка", managerTask: "Провести пост-оценку",
+    createdAt: "2024-06-01", lastCommunication: "2024-06-10",
+    postEvaluation: { businessResult: "Хорошо", deadlines: "Отлично", communication: "Хорошо", clientExpectations: "", initiative: "" },
+    archiveReason: null
   },
   {
-    id: 4,
-    name: "Никита Орлов",
-    photo: "",
-    phone: "+7 900 123 45 67",
-    telegram: "@nikita_o",
-    grade: "Junior",
-    gradeAgreement: false,
-    type: "Самостоятельный специалист",
-    spec: "UX/UI дизайн",
-    experience: "0 лет",
-    clientType: "—",
-    role: "Стажер",
-    openEnded: "Да",
-    description: "Начинающий UX/UI дизайнер, активно обучается и ищет возможности для стажировки. Готов к выполнению простых задач.",
-    resume: "—",
-    portfolio: "—",
-    status: "На скоринге",
-    managerTask: "",
-    createdAt: "2025-03-15",
-    lastCommunication: "2025-03-20",
-    postEvaluation: {}
+    id: 4, name: "Никита Орлов", phone: "+7 900 123 45 67", telegram: "@nikita_o", grade: "Junior", gradeAgreement: false,
+    type: "Самостоятельный специалист", spec: "UX/UI дизайн", experience: "0 лет", clientType: "—",
+    role: "Стажер", openEnded: "Да", description: "Начинающий UX/UI дизайнер, активно обучается.",
+    resume: "—", portfolio: "—", status: "На скоринге", managerTask: "Назначить звонок",
+    createdAt: "2025-03-15", lastCommunication: "2025-03-20", postEvaluation: {}, archiveReason: null
   },
   {
-    id: 5,
-    name: "Алексей Смирнов",
-    photo: "",
-    phone: "+7 910 222-33-44",
-    telegram: "@alex_smirnov",
-    grade: "Middle",
-    gradeAgreement: true,
-    type: "Самостоятельный специалист",
-    spec: "Дизайн и айдентика",
-    experience: "4 года",
-    clientType: "Малый бизнес",
-    role: "Специалист",
-    openEnded: "Да",
-    description: "Дизайнер айдентики. Создание логотипов, визуальных стилей, упаковки.",
-    resume: "#",
-    portfolio: "https://behance.net/alex_smirnov",
-    status: "На скоринге",
-    managerTask: "Проверить портфолио",
-    createdAt: "2024-08-20",
-    lastCommunication: "2024-08-25",
-    postEvaluation: {}
+    id: 5, name: "Алексей Смирнов", phone: "+7 910 222-33-44", telegram: "@alex_smirnov", grade: "Middle", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Дизайн и айдентика", experience: "4 года", clientType: "Малый бизнес",
+    role: "Специалист", openEnded: "Да", description: "Дизайнер айдентики. Создание логотипов, визуальных стилей.",
+    resume: "#", portfolio: "https://behance.net", status: "На скоринге", managerTask: "Проверить портфолио",
+    createdAt: "2024-08-20", lastCommunication: "2024-08-25", postEvaluation: {}, archiveReason: null
+  },
+  {
+    id: 6, name: "Мария Федорова", phone: "+7 920 333-44-55", telegram: "@mariya_fed", grade: "Senior", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Контент-маркетинг", experience: "6 лет", clientType: "Средний бизнес",
+    role: "Стратег", openEnded: "Да", description: "Специалист по стратегическому контент-маркетингу и SEO-текстам.",
+    resume: "#", portfolio: "https://mariya.com", status: "Первичный скоринг пройден", managerTask: "Провести интервью",
+    createdAt: "2024-09-01", lastCommunication: "2024-09-05", postEvaluation: {}, archiveReason: null
+  },
+  {
+    id: 7, name: "Дизайн-лаб Арт", phone: "+7 921 555-66-77", telegram: "@artlab_design", grade: "N/A", gradeAgreement: null,
+    type: "Агенство", spec: "Дизайн и айдентика", experience: "9 лет", clientType: "Крупные компании",
+    role: "Креативный директор", openEnded: "Да", description: "Полнофункциональная дизайн-студия с опытом в брендинге.",
+    resume: "#", portfolio: "https://artlab.design", status: "Нужно запросить документы", managerTask: "Запросить документы",
+    createdAt: "2024-07-10", lastCommunication: "2024-09-10", postEvaluation: {}, archiveReason: null
+  },
+  {
+    id: 8, name: "Константин Павлов", phone: "+7 922 777-88-99", telegram: "@const_p", grade: "Middle", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Таргетированная реклама", experience: "5 лет", clientType: "Малый и средний бизнес",
+    role: "Специалист", openEnded: "Да", description: "Эксперт по таргетированной рекламе в Facebook, Instagram и TikTok.",
+    resume: "#", portfolio: "—", status: "На скоринге", managerTask: "Посмотреть портфолио",
+    createdAt: "2024-10-01", lastCommunication: "2024-10-08", postEvaluation: {}, archiveReason: null
+  },
+  {
+    id: 9, name: "Виктория Соколова", phone: "+7 923 999-00-11", telegram: "@viktoria_sok", grade: "Executive", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Маркетинговая стратегия", experience: "11 лет", clientType: "Крупные компании",
+    role: "Стратег", openEnded: "Да", description: "Стратег с опытом разработки комплексных маркетинговых стратегий.",
+    resume: "#", portfolio: "—", status: "Документы получены", managerTask: "",
+    createdAt: "2024-08-15", lastCommunication: "2024-10-12", postEvaluation: {}, archiveReason: null
+  },
+  {
+    id: 10, name: "Артём Волков", phone: "+7 924 111-22-33", telegram: "@artyom_v", grade: "Junior", gradeAgreement: true,
+    type: "Самостоятельный специалист", spec: "Web-разработка", experience: "2 года", clientType: "Стартапы",
+    role: "Frontend разработчик", openEnded: "Иногда", description: "Молодой frontend-разработчик, специализируется на React и Vue.",
+    resume: "#", portfolio: "https://github.com/artyom", status: "На скоринге", managerTask: "Проверить GitHub",
+    createdAt: "2024-11-01", lastCommunication: "2024-11-05", postEvaluation: {}, archiveReason: null
   }
 ];
 
-// Archive storage
 let archivedContractors = [];
+let selectedArchiveReason = null;
+let pendingArchiveContractorId = null;
 
 // ========== HELPERS ==========
-function isAgencyOrTeam(c) {
-  return c.type === 'Агенство' || c.type === 'Проектная команда';
-}
-
-function displayGrade(c) {
-  return isAgencyOrTeam(c) ? 'N/A' : (c.grade || '—');
-}
-
-function gradeAgreementText(c) {
-  if (isAgencyOrTeam(c)) return 'Грейд не применяется';
-  return c.gradeAgreement ? 'Подрядчик согласен с грейдом' : 'Подрядчик не согласен с грейдом';
-}
-
-function gradeAgreementClass(c) {
-  if (isAgencyOrTeam(c)) return 'na';
-  return c.gradeAgreement ? 'agreed' : 'disagreed';
-}
+function isAgencyOrTeam(c) { return c.type === 'Агенство' || c.type === 'Проектная команда'; }
+function displayGrade(c) { return isAgencyOrTeam(c) ? 'N/A' : (c.grade || '—'); }
+function gradeAgreementText(c) { return isAgencyOrTeam(c) ? 'Грейд не применяется' : (c.gradeAgreement ? 'Согласен' : 'Не согласен'); }
+function gradeAgreementClass(c) { return isAgencyOrTeam(c) ? 'na' : (c.gradeAgreement ? 'agreed' : 'disagreed'); }
 
 function getStatusClass(status) {
   const map = {
-    "На скоринге": "scoring",
-    "Шорт-лист": "shortlist",
-    "Первичный скоринг пройден": "pending",
-    "Нужно запросить документы": "documents",
-    "Документы получены": "documents",
-    "Готов к пресейлу": "presale",
-    "Согласован на пресейл": "presale",
-    "На проекте / в работе": "active",
-    "В работе": "active",
-    "Нужна пост-оценка": "posteval",
-    "Нужна постоценка": "posteval",
-    "Шортлист": "shortlist",
-    "Архив": "archived"
+    "На скоринге": "scoring", "Шорт-лист": "shortlist", "Первичный скоринг пройден": "pending",
+    "Нужно запросить документы": "documents", "Документы получены": "documents", "Готов к пресейлу": "presale",
+    "Согласован на пресейл": "presale", "На проекте / в работе": "active", "В работе": "active",
+    "Нужна пост-оценка": "posteval", "Архив": "archived"
   };
   return map[status] || "pending";
 }
@@ -1288,99 +1475,74 @@ function formatDate(date) {
   if (!date) return '—';
   const d = new Date(date);
   if (Number.isNaN(d.getTime())) return '—';
-  return d.toLocaleDateString('ru-RU');
+  return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function calculateCompletenessDetails(c) {
   const fields = [
-    { key: 'name', label: 'ФИО' },
-    { key: 'phone', label: 'Телефон' },
-    { key: 'telegram', label: 'Telegram' },
-    { key: 'type', label: 'Тип подрядчика' },
-    { key: 'spec', label: 'Специализация' },
-    { key: 'experience', label: 'Опыт' },
-    { key: 'clientType', label: 'Тип клиента' },
-    { key: 'role', label: 'Роль в проектах' },
-    { key: 'openEnded', label: 'Open-ended задачи' },
-    { key: 'description', label: 'Описание' },
-    { key: 'resume', label: 'Резюме' },
-    { key: 'portfolio', label: 'Портфолио' }
+    { key: 'name', label: 'ФИО' }, { key: 'phone', label: 'Телефон' }, { key: 'telegram', label: 'Telegram' },
+    { key: 'type', label: 'Тип подрядчика' }, { key: 'spec', label: 'Специализация' }, { key: 'experience', label: 'Опыт' },
+    { key: 'clientType', label: 'Тип клиента' }, { key: 'role', label: 'Роль в проектах' },
+    { key: 'openEnded', label: 'Open-ended задачи' }, { key: 'description', label: 'Описание' },
+    { key: 'resume', label: 'Резюме' }, { key: 'portfolio', label: 'Портфолио' }
   ];
-
   if (!isAgencyOrTeam(c)) {
     fields.push({ key: 'grade', label: 'Грейд' });
     fields.push({ key: 'gradeAgreement', label: 'Согласие с грейдом' });
   }
-
-  const missing = [];
-
-  fields.forEach(field => {
-    const value = c[field.key];
-    const isMissing =
-      value === undefined ||
-      value === null ||
-      value === '' ||
-      value === '—' ||
-      value === '#';
-
-    if (isMissing) missing.push(field.label);
-  });
-
+  const missing = fields.filter(f => {
+    const v = c[f.key];
+    return v === undefined || v === null || v === '' || v === '—' || v === '#';
+  }).map(f => f.label);
   const filled = fields.length - missing.length;
-  const percent = Math.round((filled / fields.length) * 100);
-
-  return { percent, missing };
+  return { percent: Math.round((filled / fields.length) * 100), missing };
 }
 
 function isStale(c) {
-  // Only show "Требует обновления" for contractors on "На скоринге" status
   if (c.status !== "На скоринге") return false;
   if (!c.lastCommunication) return true;
   const diffDays = Math.ceil(Math.abs(new Date() - new Date(c.lastCommunication)) / (1000 * 60 * 60 * 24));
   return diffDays > 30;
 }
 
+function getDefaultTasksForStatus(status) {
+  return TASKS_BY_STATUS[status] || [];
+}
+
+function hasPostEvaluationData(c) {
+  if (!c.postEvaluation) return false;
+  return Object.values(c.postEvaluation).some(val => val && val !== '');
+}
+
 // ========== RENDER TABLE ==========
 function renderTable(data) {
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
-
   if (data.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Подрядчики не найдены</td></tr>`;
   }
-
   data.forEach(c => {
     const tr = document.createElement('tr');
     tr.className = 'contractor-row';
     tr.onclick = () => openModal(c.id);
-
-    // Format last communication date
-    const lastComm = c.lastCommunication 
-      ? new Date(c.lastCommunication).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      : '—';
-
+    const lastComm = c.lastCommunication ? new Date(c.lastCommunication).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
     tr.innerHTML = `
       <td>
         <div class="name-cell-wrap">
-          ${c.photo
-            ? `<img src="${c.photo}" class="list-avatar" />`
-            : `<div class="list-avatar placeholder">${c.name.charAt(0)}</div>`
-          }
+          ${c.photo ? `<img src="${c.photo}" class="list-avatar" />` : `<div class="list-avatar placeholder">${c.name.charAt(0)}</div>`}
           <span class="name-text">${c.name}</span>
           ${isStale(c) ? `<span class="status-tag" style="margin-left:8px;background:rgba(245,158,11,0.15);color:#fbbf24;">Требует обновления</span>` : ''}
         </div>
       </td>
       <td>${c.spec}</td>
-      <td style="text-transform:uppercase;font-size:0.75rem;font-weight:600;letter-spacing:0.03em;">${displayGrade(c)}</td>
-      <td style="font-size:0.8rem;">${c.type}</td>
+      <td style="text-transform:uppercase;font-size:0.75rem;font-weight:600;">${displayGrade(c)}</td>
+      <td>${c.type}</td>
       <td><span class="status-tag ${getStatusClass(c.status)}">${c.status}</span></td>
       <td style="font-size:0.75rem;color:var(--text-muted);">${lastComm}</td>
       <td style="text-align:center;"><i data-lucide="chevron-right" width="16" height="16" style="color:var(--text-muted);"></i></td>
     `;
-
     tbody.appendChild(tr);
   });
-
   document.getElementById('resultsCount').textContent = `Показано: ${data.length} из ${contractors.length}`;
   lucide.createIcons();
 }
@@ -1388,18 +1550,16 @@ function renderTable(data) {
 // ========== FILTERS ==========
 function applyFilters() {
   const search = document.getElementById('filterSearch').value.toLowerCase();
-  const spec   = document.getElementById('filterSpec').value;
-  const grade  = document.getElementById('filterGrade').value;
+  const spec = document.getElementById('filterSpec').value;
+  const grade = document.getElementById('filterGrade').value;
   const status = document.getElementById('filterStatus').value;
-
   const filtered = contractors.filter(c => {
     const matchSearch = !search || c.name.toLowerCase().includes(search) || c.telegram.toLowerCase().includes(search);
-    const matchSpec   = !spec   || c.spec === spec;
-    const matchGrade  = !grade  || displayGrade(c) === grade;
+    const matchSpec = !spec || c.spec === spec;
+    const matchGrade = !grade || displayGrade(c) === grade;
     const matchStatus = !status || c.status === status;
     return matchSearch && matchSpec && matchGrade && matchStatus;
   });
-
   renderTable(filtered);
 }
 
@@ -1413,13 +1573,9 @@ function sendAi() {
   const input = document.getElementById('aiInput');
   const text = input.value.trim();
   if (!text) return;
-
   addAiMsg(text, 'user');
   input.value = '';
-
-  setTimeout(() => {
-    processAiPrompt(text);
-  }, 500);
+  setTimeout(() => processAiPrompt(text), 500);
 }
 
 function applySuggestion(text) {
@@ -1438,61 +1594,29 @@ function addAiMsg(text, type) {
 
 function processAiPrompt(prompt) {
   const lower = prompt.toLowerCase();
-
   let filtersApplied = [];
 
   const specKeywords = {
-    'брендинг': 'Брендинг',
-    'айдентика': 'Дизайн и айдентика',
-    'таргет': 'Таргетированная реклама',
-    'контекст': 'Контекстная реклама',
-    'инфлюенс': 'Инфлюенс-маркетинг',
-    'seo': 'SEO',
-    'контент': 'Контент-маркетинг',
-    'копирайт': 'Копирайтинг',
-    'креатив': 'Креативная стратегия',
-    'ux': 'UX/UI дизайн',
-    'ui': 'UX/UI дизайн',
-    'web': 'Web-разработка',
-    'веб': 'Web-разработка',
-    'no-code': 'No-code разработка',
-    'nocode': 'No-code разработка',
-    'исследован': 'Исследования рынка',
-    'видео': 'Видео-продакшен',
-    'pr': 'PR и коммуникации',
-    'коммуникац': 'PR и коммуникации',
-    'growth': 'Growth маркетинг',
-    'маркетинговая стратегия': 'Маркетинговая стратегия'
+    'брендинг': 'Брендинг', 'айдентика': 'Дизайн и айдентика', 'таргет': 'Таргетированная реклама',
+    'контекст': 'Контекстная реклама', 'инфлюенс': 'Инфлюенс-маркетинг', 'seo': 'SEO',
+    'контент': 'Контент-маркетинг', 'копирайт': 'Копирайтинг', 'креатив': 'Креативная стратегия',
+    'ux': 'UX/UI дизайн', 'ui': 'UX/UI дизайн', 'web': 'Web-разработка', 'веб': 'Web-разработка',
+    'no-code': 'No-code разработка', 'nocode': 'No-code разработка', 'исследован': 'Исследования рынка',
+    'видео': 'Видео-продакшен', 'pr': 'PR и коммуникации', 'коммуникац': 'PR и коммуникации',
+    'growth': 'Growth маркетинг', 'маркетинг': 'Маркетинговая стратегия'
   };
 
   const statusKeywords = {
-    'шортлист': 'Шорт-лист',
-    'шорт-лист': 'Шорт-лист',
-    'shortlist': 'Шорт-лист',
-    'скоринг': 'На скоринге',
-    'пресейл': 'Готов к пресейлу',
-    'одобрен': 'Одобрен',
-    'в работе': 'В работе',
-    'постоцен': 'Нужна постоценка',
-    'пост-оцен': 'Нужна постоценка'
+    'шортлист': 'Шорт-лист', 'шорт-лист': 'Шорт-лист', 'shortlist': 'Шорт-лист', 'скоринг': 'На скоринге',
+    'пресейл': 'Готов к пресейлу', 'в работе': 'На проекте / в работе'
   };
 
   const gradeKeywords = {
-    'junior': 'Junior',
-    'младш': 'Junior',
-    'middle': 'Middle',
-    'mid': 'Middle',
-    'senior': 'Senior',
-    'сеньор': 'Senior',
-    'executive': 'Executive',
-    'c-level': 'C-level',
-    'na': 'N/A',
-    'n/a': 'N/A'
+    'junior': 'Junior', 'младш': 'Junior', 'middle': 'Middle', 'mid': 'Middle', 'senior': 'Senior',
+    'сеньор': 'Senior', 'executive': 'Executive', 'c-level': 'C-level'
   };
 
-  let detectedSpec = '';
-  let detectedStatus = '';
-  let detectedGrade = '';
+  let detectedSpec = '', detectedStatus = '', detectedGrade = '';
 
   for (const [keyword, value] of Object.entries(specKeywords)) {
     if (lower.includes(keyword)) { detectedSpec = value; break; }
@@ -1520,13 +1644,11 @@ function processAiPrompt(prompt) {
   applyFilters();
 
   const count = document.getElementById('tableBody').querySelectorAll('.contractor-row').length;
-
   const response = filtersApplied.length > 0
     ? `✅ Фильтры применены: ${filtersApplied.join(', ')}. Найдено: ${count} подрядчиков.`
-    : '🤔 Не удалось определить критерии. Попробуйте уточнить запрос: специализация, грейд или статус.';
+    : '🤔 Не удалось определить критерии. Попробуйте уточнить запрос.';
 
   addAiMsg(response, 'bot');
-  showToast('Фильтры обновлены', 'info');
 }
 
 // ========== MODAL ==========
@@ -1535,7 +1657,6 @@ let currentContractor = null;
 function openModal(id) {
   const c = contractors.find(c => c.id === id);
   if (!c) return;
-
   currentContractor = c;
   renderModal(c);
   document.getElementById('modalOverlay').classList.add('open');
@@ -1548,61 +1669,148 @@ function closeModal() {
   currentContractor = null;
 }
 
-function renderModal(c) {
+function renderTaskColumns(c) {
+  const tasks = getDefaultTasksForStatus(c.status);
+  let todoHtml = '';
+  tasks.forEach(task => {
+    const d = new Date();
+    d.setDate(d.getDate() + task.daysOffset);
+    const dateStr = d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+    todoHtml += `
+      <div class="task-card">
+        <div class="task-card-title">${task.title}</div>
+        <div class="task-card-meta">
+          <span class="due"><i data-lucide="calendar" width="11" height="11"></i> ${dateStr}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  return `
+    <div class="task-column">
+      <div class="task-col-header"><span>To Do</span><span class="task-col-count">${tasks.length}</span></div>
+      ${todoHtml || '<div style="color:var(--text-muted);font-size:0.75rem;">Нет задач</div>'}
+    </div>
+    <div class="task-column">
+      <div class="task-col-header"><span>In Progress</span><span class="task-col-count">0</span></div>
+      <div style="color:var(--text-muted);font-size:0.75rem;">Нет задач</div>
+    </div>
+    <div class="task-column">
+      <div class="task-col-header"><span>Done</span><span class="task-col-count">0</span></div>
+      <div style="color:var(--text-muted);font-size:0.75rem;">Нет задач</div>
+    </div>
+  `;
+}
+
+function renderPostEvaluationResults(c) {
+  const results = c.postEvaluation || {};
+  const resultItems = POST_EVALUATION_CRITERIA.map(item => {
+    const value = results[item.key];
+    return `
+      <div class="result-item">
+        <div class="result-item-label">${item.label}</div>
+        <div class="result-item-value">${value || '—'}</div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="post-eval-results">
+      <div class="post-eval-results-title">
+        <i data-lucide="check-circle" width="18" height="18"></i>
+        Результаты пост-оценки
+      </div>
+      <div class="result-grid">
+        ${resultItems}
+      </div>
+    </div>
+  `;
+}
+
+function renderPostEvaluationSection(c) {
+  const rows = POST_EVALUATION_CRITERIA.map(item => {
+    const currentValue = c.postEvaluation?.[item.key] || '';
+    const options = [`<option value="">Выберите оценку</option>`, ...EVALUATION_OPTIONS.map(option => `<option value="${option}" ${option === currentValue ? 'selected' : ''}>${option}</option>`)].join('');
+    return `
+      <div class="eval-row">
+        <div class="eval-criterion">${item.label}</div>
+        <select class="input-field" onchange="setPostEvaluation('${item.key}', this.value)">
+          ${options}
+        </select>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="post-eval-section">
+      <div class="post-eval-title">
+        <i data-lucide="clipboard-check" width="18" height="18"></i>
+        Пост-оценка подрядчика
+      </div>
+      <div class="post-eval-subtitle">
+        Заполните оценку по критериям, затем выберите действие
+      </div>
+      <div class="eval-grid">
+        ${rows}
+      </div>
+      <div class="post-eval-actions">
+        <button class="btn btn-danger" onclick="openArchiveReasonModal(${c.id})">
+          <i data-lucide="archive" width="16" height="16"></i>
+          Перенести в архив
+        </button>
+        <button class="btn btn-gradient" onclick="moveToShortlist(${c.id})">
+          <i data-lucide="star" width="16" height="16"></i>
+          Перенести в шорт-лист
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderModal(c, isArchived = false) {
   const avatarHtml = c.photo
     ? `<img src="${c.photo}" class="modal-avatar" alt="${c.name}" />`
-    : `<div class="modal-avatar" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text-muted);background:rgba(255,255,255,0.05);">${c.name.charAt(0)}</div>`;
+    : `<div class="modal-avatar" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text-muted);background:var(--bg-hover);">${c.name.charAt(0)}</div>`;
 
   const resumeLink = c.resume && c.resume !== '#' && c.resume !== '—'
-    ? `<a href="${c.resume}" target="_blank" rel="noopener"><i data-lucide="external-link" width="13" height="13"></i> Открыть резюме</a>`
+    ? `<a href="${c.resume}" target="_blank"><i data-lucide="external-link" width="13" height="13"></i> Открыть</a>`
     : '<span style="color:var(--text-muted);">—</span>';
 
   const portfolioLink = c.portfolio && c.portfolio !== '—' && c.portfolio !== '#'
-    ? `<a href="${c.portfolio}" target="_blank" rel="noopener"><i data-lucide="external-link" width="13" height="13"></i> ${c.portfolio}</a>`
+    ? `<a href="${c.portfolio}" target="_blank"><i data-lucide="external-link" width="13" height="13"></i> ${c.portfolio}</a>`
     : '<span style="color:var(--text-muted);">—</span>';
 
-  const managerTaskHtml = c.managerTask
-    ? `<div class="manager-task">
-         <div class="manager-task-label"><i data-lucide="alert-circle" width="13" height="13"></i> Задача для менеджера</div>
-         <div class="manager-task-text">${c.managerTask}</div>
+  const archiveReasonHtml = isArchived && c.archiveReason
+    ? `<div class="info-block" style="margin-top:1rem;">
+         <div class="info-block-title">Причина архивации</div>
+         <div class="description-box" style="padding:0.75rem 1rem;">${c.archiveReason}</div>
        </div>`
     : '';
 
-  const allStatuses = [
-    'Первичный скоринг пройден',
-    'На скоринге',
-    'Нужно запросить документы',
-    'Документы получены',
-    'Готов к пресейлу',
-    'Согласован на проект',
-    'В работе',
-    'Нужна постоценка',
-    'Шорт-лист / Стоплист',
-    'Одобрен'
-  ];
+  const displayStatus = isArchived ? 'Архив' : c.status;
+  const displayStatusClass = isArchived ? getStatusClass('Архив') : getStatusClass(c.status);
+
+  const allStatuses = ['На скоринге', 'Шорт-лист', 'Первичный скоринг пройден', 'Нужно запросить документы',
+                       'Документы получены', 'Готов к пресейлу', 'Согласован на пресейл', 'На проекте / в работе', 'Нужна пост-оценка'];
 
   const statusOptionsHtml = allStatuses.map(s =>
     `<button class="status-option ${s === c.status ? 'active' : ''}" onclick="changeStatus('${s}')">${s}</button>`
   ).join('');
 
-  const reviewOptions = REVIEW_MANAGERS
-    .map(name => `<option value="${name}">${name}</option>`)
-    .join('');
+  const reviewOptions = REVIEW_MANAGERS.map(name => `<option value="${name}">${name}</option>`).join('');
 
   const completeness = calculateCompletenessDetails(c);
 
   const missingListHtml = completeness.missing.length
     ? `<ul>${completeness.missing.map(item => `<li>${item}</li>`).join('')}</ul>`
-    : `<div style="color:var(--accent-green);">Все ключевые поля заполнены</div>`;
+    : `<div style="color:var(--accent-green);">✓ Все ключевые поля заполнены</div>`;
 
-  const postEvaluationHtml = (c.status === 'Нужна пост-оценка' || c.status === 'Нужна постоценка')
-    ? renderPostEvaluationSection(c)
-    : '';
+  const postEvaluationHtml = (c.status === 'Нужна пост-оценка') ? renderPostEvaluationSection(c) : '';
+  const postEvalResultsHtml = c.status === 'Нужна пост-оценка' && hasPostEvaluationData(c) ? renderPostEvaluationResults(c) : '';
 
   const modal = document.getElementById('modalContent');
 
   modal.innerHTML = `
-    <!-- HEADER -->
     <div class="modal-header">
       <div class="modal-header-left">
         ${avatarHtml}
@@ -1610,15 +1818,15 @@ function renderModal(c) {
           <div class="modal-name">${c.name}</div>
           <div class="modal-meta">
             <div class="status-dropdown-wrap">
-              <button class="status-dropdown-btn status-tag ${getStatusClass(c.status)}" id="statusBtn" onclick="toggleStatusDropdown()">
-                <span id="statusLabel">${c.status}</span>
+              <button class="status-dropdown-btn status-tag ${displayStatusClass}" id="statusBtn" onclick="toggleStatusDropdown()">
+                <span id="statusLabel">${displayStatus}</span>
                 <i data-lucide="chevron-down" width="12" height="12" class="chevron"></i>
               </button>
               <div class="status-dropdown-menu" id="statusMenu">
                 ${statusOptionsHtml}
               </div>
             </div>
-            <span style="font-size:0.72rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">ID: #${String(c.id).padStart(4, '0')}</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">ID: #${String(c.id).padStart(4, '0')}</span>
           </div>
         </div>
       </div>
@@ -1627,13 +1835,8 @@ function renderModal(c) {
       </button>
     </div>
 
-    <!-- BODY -->
     <div class="modal-body">
-
-      <!-- LEFT COLUMN -->
       <div class="modal-left">
-
-        <!-- Contacts -->
         <div class="contact-list">
           <div class="contact-item">
             <i data-lucide="phone" width="15" height="15"></i>
@@ -1664,7 +1867,6 @@ function renderModal(c) {
 
         <hr class="divider" />
 
-        <!-- Links -->
         <div>
           <div class="info-block-title" style="margin-bottom:0.5rem;">Резюме</div>
           <div style="font-size:0.85rem;margin-bottom:0.75rem;">${resumeLink}</div>
@@ -1672,56 +1874,40 @@ function renderModal(c) {
           <div style="font-size:0.85rem;">${portfolioLink}</div>
         </div>
 
-        <hr class="divider" />
-
-        <!-- Manager Task -->
-        ${managerTaskHtml}
-
-        <hr class="divider" />
-
-        <!-- Reminder -->
-        <div class="reminder-section">
-          <button class="btn btn-ghost btn-sm btn-full" onclick="toggleReminderPanel()">
-            <i data-lucide="bell" width="14" height="14"></i>
-            Поставить напоминание
-          </button>
-          <div class="reminder-panel" id="reminderPanel">
-            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.35rem;">Дата и время напоминания</div>
-            <input type="datetime-local" class="input-field" id="reminderDatetime" />
-            <button class="btn btn-gradient btn-sm btn-full" onclick="createReminder()" style="margin-top:0.5rem;">
-              <i data-lucide="check" width="14" height="14"></i>
-              Создать напоминание
-            </button>
-          </div>
-        </div>
-
+        ${archiveReasonHtml}
       </div>
 
-      <!-- RIGHT COLUMN -->
       <div class="modal-right">
-
-        <!-- Description -->
-        <div>
-          <div class="info-block-title" style="margin-bottom:0.5rem;">Описание подрядчика</div>
-          <div class="description-box">${c.description || '—'}</div>
-        </div>
-
-        <!-- Detail Grid -->
         <div class="detail-grid">
           <div class="detail-item">
             <div class="detail-item-label">Специализация</div>
-            <div class="detail-item-value">${c.spec || '—'}</div>
+            <div class="editable-field">
+              <div class="detail-item-value editable-field-value" data-field="spec">${c.spec || '—'}</div>
+              <button class="edit-btn" onclick="startEditField('spec')">
+                <i data-lucide="edit-2" width="14" height="14"></i>
+              </button>
+            </div>
           </div>
           <div class="detail-item">
             <div class="detail-item-label">Тип клиента</div>
-            <div class="detail-item-value">${c.clientType || '—'}</div>
+            <div class="editable-field">
+              <div class="detail-item-value editable-field-value" data-field="clientType">${c.clientType || '—'}</div>
+              <button class="edit-btn" onclick="startEditField('clientType')">
+                <i data-lucide="edit-2" width="14" height="14"></i>
+              </button>
+            </div>
           </div>
           <div class="detail-item">
-            <div class="detail-item-label">Роль в проектах</div>
-            <div class="detail-item-value">${c.role || '—'}</div>
+            <div class="detail-item-label">Роль</div>
+            <div class="editable-field">
+              <div class="detail-item-value editable-field-value" data-field="role">${c.role || '—'}</div>
+              <button class="edit-btn" onclick="startEditField('role')">
+                <i data-lucide="edit-2" width="14" height="14"></i>
+              </button>
+            </div>
           </div>
           <div class="detail-item">
-            <div class="detail-item-label">Open-ended задачи</div>
+            <div class="detail-item-label">Open-ended</div>
             <div class="detail-item-value ${c.openEnded === 'Да' ? 'yes' : (c.openEnded === 'Нет' ? 'no' : '')}">${c.openEnded || '—'}</div>
           </div>
           <div class="detail-item">
@@ -1730,26 +1916,30 @@ function renderModal(c) {
           </div>
           <div class="detail-item">
             <div class="detail-item-label">Опыт</div>
-            <div class="detail-item-value ${c.experience === '0 лет' ? 'zero-exp' : ''}">${c.experience || '—'}</div>
-            ${c.experience === '0 лет' ? `
-              <button class="btn btn-danger btn-sm" style="margin-top:6px;" onclick="moveToInternship()">
-                Перенести в «Стажировка»
+            <div class="editable-field">
+              <div class="detail-item-value editable-field-value ${c.experience === '0 лет' ? 'zero-exp' : ''}" data-field="experience">${c.experience || '—'}</div>
+              <button class="edit-btn" onclick="startEditField('experience')">
+                <i data-lucide="edit-2" width="14" height="14"></i>
               </button>
-            ` : ''}
+            </div>
           </div>
           <div class="detail-item">
             <div class="detail-item-label">Грейд</div>
-            <div class="detail-item-value">${displayGrade(c)}</div>
+            <div class="editable-field">
+              <div class="detail-item-value editable-field-value" data-field="grade">${displayGrade(c)}</div>
+              <button class="edit-btn" onclick="startEditField('grade')">
+                <i data-lucide="edit-2" width="14" height="14"></i>
+              </button>
+            </div>
           </div>
           <div class="detail-item">
-            <div class="detail-item-label">Согласие с грейдом</div>
+            <div class="detail-item-label">Согласие</div>
             <div class="grade-agreement ${gradeAgreementClass(c)}" style="margin-top:0;">
               ${gradeAgreementText(c)}
             </div>
           </div>
         </div>
 
-        <!-- Completeness -->
         <div class="completeness-card">
           <div class="missing-tooltip">
             <div class="missing-tooltip-title">Что нужно заполнить:</div>
@@ -1759,17 +1949,16 @@ function renderModal(c) {
           <div class="info-block-title">Заполненность профиля</div>
           <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
             <span style="font-size:0.85rem;font-weight:600;">${completeness.percent}%</span>
-            <span style="font-size:0.72rem;color:var(--text-muted);">наведите, чтобы увидеть недостающие поля</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">наведите для деталей</span>
           </div>
           <div class="completeness-bar">
             <div class="completeness-fill" style="width:${completeness.percent}%"></div>
           </div>
         </div>
 
-        <!-- Post Evaluation -->
+        ${postEvalResultsHtml}
         ${postEvaluationHtml}
 
-        <!-- Send for Review -->
         <div style="background:rgba(54,134,255,0.05);border:1px solid rgba(54,134,255,0.2);border-radius:0.5rem;padding:1rem;">
           <div class="info-block-title" style="color:var(--accent-blue);">Отправить на проверку</div>
           <select id="reviewSelect" class="input-field" style="margin-bottom:0.5rem;">
@@ -1781,80 +1970,35 @@ function renderModal(c) {
           </button>
         </div>
 
-        <!-- Task Tracker -->
         <div class="task-tracker-section">
-          <h3><i data-lucide="layout-list" width="18" height="18"></i> Task Tracker</h3>
+          <h3><i data-lucide="layout-list" width="18" height="18"></i> Задачи</h3>
 
           <div class="task-toolbar">
             <select class="input-field" onchange="filterTasks(this.value)">
-              <option value="all">Все задачи</option>
+              <option value="all">Все</option>
               <option value="mine">Только мои</option>
             </select>
             <button class="btn btn-ghost btn-sm" onclick="addNewTask()">
-              <i data-lucide="plus" width="14" height="14"></i> Новая задача
+              <i data-lucide="plus" width="14" height="14"></i> Новая
             </button>
           </div>
 
           <div class="task-columns" id="taskColumns">
-            <div class="task-column" id="colTodo">
-              <div class="task-col-header">
-                <span>To Do</span>
-                <span class="task-col-count" id="countTodo">2</span>
-              </div>
-              <div class="task-card urgent">
-                <div class="task-card-title">${c.managerTask || 'Нет задач'}</div>
-                <div class="task-card-meta">
-                  <span class="due"><i data-lucide="calendar" width="11" height="11"></i> 05.04.2025</span>
-                  <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Менеджер</span>
-                </div>
-              </div>
-              <div class="task-card">
-                <div class="task-card-title">Запросить портфолио</div>
-                <div class="task-card-meta">
-                  <span class="due"><i data-lucide="calendar" width="11" height="11"></i> 06.04.2025</span>
-                  <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Анна</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="task-column" id="colProgress">
-              <div class="task-col-header">
-                <span>In Progress</span>
-                <span class="task-col-count" id="countProgress">1</span>
-              </div>
-              <div class="task-card">
-                <div class="task-card-title">Интервью с подрядчиком</div>
-                <div class="task-card-meta">
-                  <span class="due"><i data-lucide="calendar" width="11" height="11"></i> 03.04.2025</span>
-                  <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Иван</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="task-column" id="colDone">
-              <div class="task-col-header">
-                <span>Done</span>
-                <span class="task-col-count" id="countDone">1</span>
-              </div>
-              <div class="task-card done">
-                <div class="task-card-title">Анкета проверена</div>
-                <div class="task-card-meta">
-                  <span class="due"><i data-lucide="calendar" width="11" height="11"></i> 30.03.2025</span>
-                  <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Анна</span>
-                </div>
-              </div>
-            </div>
+            ${renderTaskColumns(c)}
           </div>
         </div>
-
       </div>
     </div>
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">Закрыть</button>
+      ${isArchived ? `<button class="btn btn-secondary" onclick="restoreFromArchive(${c.id})">
+        <i data-lucide="rotate-ccw" width="14" height="14"></i>
+        Восстановить
+      </button>` : ''}
       <button class="btn btn-gradient" onclick="saveContractor()">
         <i data-lucide="save" width="14" height="14"></i>
-        Сохранить изменения
+        Сохранить
       </button>
     </div>
   `;
@@ -1862,78 +2006,111 @@ function renderModal(c) {
   lucide.createIcons();
 }
 
-// ========== POST EVALUATION ==========
-function renderPostEvaluationSection(c) {
-  const rows = POST_EVALUATION_CRITERIA.map(item => {
-    const currentValue = c.postEvaluation?.[item.key] || '';
+// ========== EDIT FIELDS ==========
+function startEditField(fieldName) {
+  if (!currentContractor) return;
+  const valueDiv = document.querySelector(`[data-field="${fieldName}"]`);
+  if (!valueDiv) return;
 
-    const options = [
-      `<option value="">Выберите оценку</option>`,
-      ...EVALUATION_OPTIONS.map(option =>
-        `<option value="${option}" ${option === currentValue ? 'selected' : ''}>${option}</option>`
-      )
-    ].join('');
+  const currentValue = currentContractor[fieldName] || '';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'editable-input';
+  input.value = currentValue;
 
-    return `
-      <div class="eval-row">
-        <div class="eval-criterion">${item.label}</div>
-        <select class="input-field" onchange="setPostEvaluation('${item.key}', this.value)">
-          ${options}
-        </select>
-      </div>
-    `;
-  }).join('');
+  valueDiv.replaceWith(input);
+  input.focus();
+  input.select();
 
-  return `
-    <div class="post-eval-section">
-      <div class="post-eval-title">
-        <i data-lucide="clipboard-check" width="18" height="18" style="color:var(--accent-red);"></i>
-        Пост-оценка подрядчика
-      </div>
-      <div class="post-eval-subtitle">
-        Этот блок появляется, когда подрядчик находится на этапе «Нужна пост-оценка».
-      </div>
-      <div class="eval-grid">
-        ${rows}
-      </div>
-      <div style="margin-top:1.5rem;display:flex;gap:0.75rem;">
-        <button class="btn btn-primary" onclick="moveToArchive(${c.id})">
-          <i data-lucide="archive" width="16" height="16"></i>
-          Перенести в архив
-        </button>
-      </div>
-    </div>
-  `;
+  const saveEdit = () => {
+    currentContractor[fieldName] = input.value || '—';
+    renderModal(currentContractor);
+    showToast('Поле обновлено', 'success');
+  };
+
+  input.addEventListener('blur', saveEdit);
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') saveEdit();
+  });
 }
 
+// ========== POST EVALUATION ==========
 function setPostEvaluation(key, value) {
   if (!currentContractor) return;
   if (!currentContractor.postEvaluation) currentContractor.postEvaluation = {};
   currentContractor.postEvaluation[key] = value;
+  renderModal(currentContractor, archivedContractors.includes(currentContractor));
   showToast('Оценка сохранена', 'success');
 }
 
-function moveToArchive(contractorId) {
+function moveToShortlist(contractorId) {
   const contractor = contractors.find(c => c.id === contractorId);
   if (!contractor) return;
+
+  contractor.status = 'Шорт-лист';
+  closeModal();
+  applyFilters();
+  showToast('Подрядчик перенесён в шорт-лист', 'success');
+}
+
+// ========== ARCHIVE REASON MODAL ==========
+function openArchiveReasonModal(contractorId) {
+  pendingArchiveContractorId = contractorId;
+  selectedArchiveReason = null;
   
-  // Move to archive
+  const reasonsHtml = ARCHIVE_REASONS.map((reason) => `
+    <button class="reason-option" onclick="selectArchiveReason('${reason}')">
+      ${reason}
+    </button>
+  `).join('');
+
+  document.getElementById('reasonOptions').innerHTML = reasonsHtml;
+  document.getElementById('archiveReasonModal').classList.add('open');
+}
+
+function closeArchiveReasonModal() {
+  document.getElementById('archiveReasonModal').classList.remove('open');
+  selectedArchiveReason = null;
+  pendingArchiveContractorId = null;
+}
+
+function selectArchiveReason(reason) {
+  selectedArchiveReason = reason;
+  
+  document.querySelectorAll('.reason-option').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  event.target.classList.add('selected');
+}
+
+function confirmArchiveWithReason() {
+  if (!selectedArchiveReason) {
+    showToast('Выберите причину архивации', 'info');
+    return;
+  }
+
+  const contractor = contractors.find(c => c.id === pendingArchiveContractorId);
+  if (!contractor) return;
+
+  contractor.archiveReason = selectedArchiveReason;
+  
   archivedContractors.push({
     ...contractor,
     archivedAt: new Date().toISOString()
   });
-  
-  // Remove from active contractors
-  const index = contractors.findIndex(c => c.id === contractorId);
+
+  const index = contractors.findIndex(c => c.id === pendingArchiveContractorId);
   if (index > -1) {
     contractors.splice(index, 1);
   }
-  
+
+  closeArchiveReasonModal();
   closeModal();
   applyFilters();
-  showToast('Подрядчик перенесён в архив', 'success');
+  showToast(`Подрядчик архивирован. Причина: ${selectedArchiveReason}`, 'success');
 }
 
+// ========== ARCHIVE VIEW ==========
 function showArchive() {
   const modal = document.getElementById('modalContent');
   
@@ -1945,97 +2122,110 @@ function showArchive() {
           <i data-lucide="x" width="18" height="18"></i>
         </button>
       </div>
-      <div class="modal-body" style="padding:2rem;text-align:center;color:var(--text-muted);">
-        <i data-lucide="archive" width="48" height="48" style="opacity:0.3;margin-bottom:1rem;"></i>
+      <div style="padding:3rem;text-align:center;color:var(--text-muted);">
+        <i data-lucide="archive" width="48" height="48" style="opacity:0.3;margin-bottom:1rem;display:block;"></i>
         <p>Архив пуст</p>
       </div>
     `;
     lucide.createIcons();
-    document.getElementById('contractorModal').classList.add('is-visible');
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
     return;
   }
-  
-  const rows = archivedContractors.map(c => `
-    <tr style="border-bottom:1px solid var(--border);">
-      <td style="padding:0.75rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          ${c.photo ? `<img src="${c.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--accent-purple);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;">${c.name.charAt(0)}</div>`}
-          <span>${c.name}</span>
+
+  const rows = archivedContractors.map(c => {
+    const tr = document.createElement('tr');
+    tr.className = 'contractor-row';
+    tr.onclick = () => openArchivedModal(c.id);
+    const lastComm = c.lastCommunication ? new Date(c.lastCommunication).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+    tr.innerHTML = `
+      <td>
+        <div class="name-cell-wrap">
+          ${c.photo ? `<img src="${c.photo}" class="list-avatar" />` : `<div class="list-avatar placeholder">${c.name.charAt(0)}</div>`}
+          <span class="name-text">${c.name}</span>
         </div>
       </td>
-      <td style="padding:0.75rem;font-size:0.8rem;">${c.spec}</td>
-      <td style="padding:0.75rem;"><span class="status-tag archived">Архив</span></td>
-      <td style="padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">${c.archivedAt ? new Date(c.archivedAt).toLocaleDateString('ru-RU') : '—'}</td>
-      <td style="padding:0.75rem;">
-        <button class="btn-icon" onclick="restoreFromArchive(${c.id})" title="Восстановить">
-          <i data-lucide="rotate-ccw" width="16" height="16"></i>
-        </button>
-      </td>
-    </tr>
-  `).join('');
-  
+      <td>${c.spec}</td>
+      <td style="text-transform:uppercase;font-size:0.75rem;font-weight:600;">${displayGrade(c)}</td>
+      <td>${c.type}</td>
+      <td><span class="status-tag ${getStatusClass(c.status)}">${c.status}</span></td>
+      <td style="font-size:0.75rem;color:var(--text-muted);">${lastComm}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted);">${c.archiveReason || '—'}</td>
+      <td style="text-align:center;"><i data-lucide="chevron-right" width="16" height="16" style="color:var(--text-muted);"></i></td>
+    `;
+    return tr.outerHTML;
+  }).join('');
+
   modal.innerHTML = `
     <div class="modal-header">
-      <h2>Архив подрядчиков</h2>
+      <h2>Архив подрядчиков (${archivedContractors.length})</h2>
       <button class="modal-close" onclick="closeModal()">
         <i data-lucide="x" width="18" height="18"></i>
       </button>
     </div>
     <div class="modal-body">
-      <table style="width:100%;border-collapse:collapse;">
-        <thead>
-          <tr style="border-bottom:1px solid var(--border);">
-            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">ФИО</th>
-            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Специализация</th>
-            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Статус</th>
-            <th style="text-align:left;padding:0.75rem;font-size:0.75rem;color:var(--text-muted);">Дата архивации</th>
-            <th style="width:50px;"></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows}
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table class="contractor-table">
+          <thead>
+            <tr>
+              <th style="width:24%">ФИО</th>
+              <th style="width:16%">Специализация</th>
+              <th style="width:10%">Грейд</th>
+              <th style="width:14%">Тип подрядчика</th>
+              <th style="width:16%">Статус скоринга</th>
+              <th style="width:14%">Последняя коммуникация</th>
+              <th style="width:14%">Причина архивации</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="archiveTableBody">
+            ${rows}
+          </tbody>
+        </table>
+      </div>
     </div>
   `;
   
   lucide.createIcons();
-  document.getElementById('contractorModal').classList.add('is-visible');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function restoreFromArchive(contractorId) {
   const contractor = archivedContractors.find(c => c.id === contractorId);
   if (!contractor) return;
-  
-  // Remove archived data
+
   const { archivedAt, ...rest } = contractor;
-  
-  // Add back to active contractors
   contractors.push(rest);
-  
-  // Remove from archive
+
   const index = archivedContractors.findIndex(c => c.id === contractorId);
   if (index > -1) {
     archivedContractors.splice(index, 1);
   }
-  
+
   showArchive();
   applyFilters();
-  showToast('Подрядчик восстановлен из архива', 'success');
+  showToast('Подрядчик восстановлен', 'success');
+}
+
+function openArchivedModal(id) {
+  const c = archivedContractors.find(item => item.id === id);
+  if (!c) return;
+  currentContractor = c;
+  renderModal(c, true);
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 // ========== CREATE MODAL ==========
 function openCreateModal() {
   currentContractor = {
     id: Date.now(),
-    name: "",
-    spec: "",
-    grade: "",
-    gradeAgreement: true,
-    type: "",
-    status: "На скоринге",
-    experience: "",
-    createdAt: new Date().toISOString()
+    name: "", photo: "", phone: "", telegram: "", spec: "", grade: "Middle", gradeAgreement: true,
+    type: "Самостоятельный специалист", experience: "", clientType: "", role: "", openEnded: "",
+    description: "", resume: "", portfolio: "", status: "На скоринге", managerTask: "",
+    createdAt: new Date().toISOString(), lastCommunication: new Date().toISOString(),
+    postEvaluation: {}, archiveReason: null
   };
 
   const specOptions = SPECIALIZATIONS.map(s => `<option value="${s}">${s}</option>`).join('');
@@ -2069,18 +2259,32 @@ function openCreateModal() {
           <div class="detail-item">
             <div class="detail-item-label">Специализация</div>
             <select id="createSpec" class="input-field">
-              <option value="">Выберите специализацию</option>
+              <option value="">Выберите</option>
               ${specOptions}
             </select>
           </div>
 
           <div class="detail-item">
-            <div class="detail-item-label">Тип подрядчика</div>
-            <select id="createType" class="input-field" onchange="syncCreateGradeByType()">
-              <option value="">Выберите тип</option>
+            <div class="detail-item-label">Тип</div>
+            <select id="createType" class="input-field">
               <option>Самостоятельный специалист</option>
               <option>Агенство</option>
               <option>Проектная команда</option>
+            </select>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-item-label">Статус</div>
+            <select id="createStatus" class="input-field">
+              <option>На скоринге</option>
+              <option>Шорт-лист</option>
+              <option>Первичный скоринг пройден</option>
+              <option>Нужно запросить документы</option>
+              <option>Документы получены</option>
+              <option>Готов к пресейлу</option>
+              <option>Согласован на пресейл</option>
+              <option>На проекте / в работе</option>
+              <option>Нужна пост-оценка</option>
             </select>
           </div>
 
@@ -2097,43 +2301,48 @@ function openCreateModal() {
           </div>
 
           <div class="detail-item">
-            <div class="detail-item-label">Согласие с грейдом</div>
-            <select id="createGradeAgreement" class="input-field">
-              <option value="true">Подрядчик согласен с грейдом</option>
-              <option value="false">Подрядчик не согласен с грейдом</option>
-              <option value="na">N/A</option>
-            </select>
-          </div>
-
-          <div class="detail-item">
             <div class="detail-item-label">Опыт</div>
             <input id="createExperience" type="text" class="input-field" placeholder="Например: 5 лет">
           </div>
 
           <div class="detail-item">
-            <div class="detail-item-label">Статус</div>
-            <select id="createStatus" class="input-field">
-              <option>На скоринге</option>
-              <option>Первичный скоринг пройден</option>
-              <option>Нужно запросить документы</option>
-              <option>Документы получены</option>
-              <option>Готов к пресейлу</option>
-              <option>Согласован на проект</option>
-              <option>В работе</option>
-              <option>Нужна постоценка</option>
-              <option>Шорт-лист / Стоплист</option>
-              <option>Одобрен</option>
+            <div class="detail-item-label">Тип клиента</div>
+            <input id="createClientType" type="text" class="input-field" placeholder="Клиенты">
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-item-label">Роль</div>
+            <input id="createRole" type="text" class="input-field" placeholder="Роль">
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-item-label">Open-ended</div>
+            <select id="createOpenEnded" class="input-field">
+              <option value="">Выберите</option>
+              <option value="Да">Да</option>
+              <option value="Нет">Нет</option>
+              <option value="Иногда">Иногда</option>
             </select>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-item-label">Резюме</div>
+            <input id="createResume" type="text" class="input-field" placeholder="Ссылка на резюме">
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-item-label">Портфолио</div>
+            <input id="createPortfolio" type="text" class="input-field" placeholder="Ссылка на портфолио">
           </div>
         </div>
 
         <div class="info-block">
           <div class="info-block-title">Описание</div>
-          <textarea id="createDescription" class="input-field" placeholder="Расскажите о навыках подрядчика..."></textarea>
+          <textarea id="createDescription" class="input-field" placeholder="О навыках подрядчика..."></textarea>
         </div>
 
         <div style="text-align:right;">
-          <button class="btn btn-gradient" onclick="createContractorFromForm()">Сохранить подрядчика</button>
+          <button class="btn btn-gradient" onclick="createContractorFromForm()">Создать</button>
         </div>
       </div>
     </div>
@@ -2144,55 +2353,42 @@ function openCreateModal() {
   lucide.createIcons();
 }
 
-function syncCreateGradeByType() {
-  const type = document.getElementById('createType').value;
-  const grade = document.getElementById('createGrade');
-  const agreement = document.getElementById('createGradeAgreement');
-
-  if (type === 'Агенство' || type === 'Проектная команда') {
-    grade.value = 'N/A';
-    agreement.value = 'na';
-    grade.disabled = true;
-    agreement.disabled = true;
-  } else {
-    grade.disabled = false;
-    agreement.disabled = false;
-    if (grade.value === 'N/A') grade.value = 'Junior';
-    if (agreement.value === 'na') agreement.value = 'true';
-  }
-}
-
 function createContractorFromForm() {
-  const type = document.getElementById('createType').value;
-  const isEntity = type === 'Агенство' || type === 'Проектная команда';
+  const name = document.getElementById('createName').value;
+  if (!name.trim()) {
+    showToast('Введите имя подрядчика', 'info');
+    return;
+  }
 
   const newContractor = {
     id: Date.now(),
-    name: document.getElementById('createName').value || 'Новый подрядчик',
+    name: name,
     photo: document.getElementById('createPhoto').value || '',
     phone: document.getElementById('createPhone').value || '',
     telegram: document.getElementById('createTelegram').value || '',
-    grade: isEntity ? 'N/A' : document.getElementById('createGrade').value,
-    gradeAgreement: isEntity ? null : document.getElementById('createGradeAgreement').value === 'true',
-    type: type || 'Самостоятельный специалист',
+    grade: document.getElementById('createGrade').value,
+    gradeAgreement: true,
+    type: document.getElementById('createType').value,
     spec: document.getElementById('createSpec').value || 'Брендинг',
-    experience: document.getElementById('createExperience').value || '0 лет',
-    clientType: '',
-    role: '',
-    openEnded: '',
+    experience: document.getElementById('createExperience').value || '',
+    clientType: document.getElementById('createClientType').value || '',
+    role: document.getElementById('createRole').value || '',
+    openEnded: document.getElementById('createOpenEnded').value || '',
     description: document.getElementById('createDescription').value || '',
-    resume: '',
-    portfolio: '',
+    resume: document.getElementById('createResume').value || '',
+    portfolio: document.getElementById('createPortfolio').value || '',
     status: document.getElementById('createStatus').value || 'На скоринге',
     managerTask: '',
     createdAt: new Date().toISOString(),
-    postEvaluation: {}
+    lastCommunication: new Date().toISOString(),
+    postEvaluation: {},
+    archiveReason: null
   };
 
   contractors.unshift(newContractor);
   closeModal();
   applyFilters();
-  showToast('Новая карточка подрядчика создана', 'success');
+  showToast('Подрядчик создан', 'success');
 }
 
 // ========== STATUS DROPDOWN ==========
@@ -2207,20 +2403,12 @@ function changeStatus(newStatus) {
   if (!currentContractor) return;
 
   currentContractor.status = newStatus;
-
-  if (newStatus === 'Нужна постоценка' && !currentContractor.postEvaluation) {
-    currentContractor.postEvaluation = {};
-  }
+  if (!currentContractor.postEvaluation) currentContractor.postEvaluation = {};
 
   renderModal(currentContractor);
   applyFilters();
 
-  showToast(
-    newStatus === 'Нужна постоценка'
-      ? 'Статус изменён. Открыт блок пост-оценки подрядчика.'
-      : `Статус изменён: ${newStatus}`,
-    'success'
-  );
+  showToast(`Статус: ${newStatus}`, 'success');
 }
 
 document.addEventListener('click', (e) => {
@@ -2242,64 +2430,27 @@ function toggleReminderPanel() {
 function createReminder() {
   const dt = document.getElementById('reminderDatetime').value;
   if (!dt) {
-    showToast('Выберите дату и время', 'info');
+    showToast('Выберите дату', 'info');
     return;
   }
 
   const dateObj = new Date(dt);
   const formatted = dateObj.toLocaleDateString('ru-RU') + ' ' + dateObj.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
-  const col = document.getElementById('colTodo');
-  const countEl = document.getElementById('countTodo');
-  const currentCount = parseInt(countEl.textContent) || 0;
-
-  const card = document.createElement('div');
-  card.className = 'task-card urgent';
-  card.innerHTML = `
-    <div class="task-card-title">Проверить карточку</div>
-    <div class="task-card-meta">
-      <span class="due"><i data-lucide="calendar" width="11" height="11"></i> ${formatted}</span>
-      <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Менеджер</span>
-    </div>
-  `;
-
-  col.appendChild(card);
-  countEl.textContent = currentCount + 1;
-
   document.getElementById('reminderPanel').classList.remove('open');
   document.getElementById('reminderDatetime').value = '';
 
-  lucide.createIcons();
-  showToast(`Напоминание на ${formatted} — задача «Проверить карточку» добавлена в таск-трекер`, 'success');
+  showToast(`Напоминание на ${formatted}`, 'success');
 }
 
-// ========== TASK TRACKER HELPERS ==========
+// ========== TASK TRACKER ==========
 function filterTasks(value) {
-  showToast(value === 'mine' ? 'Показаны только мои задачи' : 'Показаны все задачи', 'info');
+  showToast(value === 'mine' ? 'Мои задачи' : 'Все задачи', 'info');
 }
 
 function addNewTask() {
   const title = prompt('Название задачи:');
   if (!title) return;
-
-  const col = document.getElementById('colTodo');
-  const countEl = document.getElementById('countTodo');
-  const currentCount = parseInt(countEl.textContent) || 0;
-
-  const card = document.createElement('div');
-  card.className = 'task-card';
-  card.innerHTML = `
-    <div class="task-card-title">${title}</div>
-    <div class="task-card-meta">
-      <span class="due"><i data-lucide="calendar" width="11" height="11"></i> Без дедлайна</span>
-      <span class="assignee"><i data-lucide="user" width="11" height="11"></i> Менеджер</span>
-    </div>
-  `;
-
-  col.appendChild(card);
-  countEl.textContent = currentCount + 1;
-
-  lucide.createIcons();
   showToast(`Задача «${title}» добавлена`, 'success');
 }
 
@@ -2312,25 +2463,11 @@ function saveContractor() {
 // ========== SEND FOR REVIEW ==========
 function sendForReview() {
   const manager = document.getElementById('reviewSelect').value;
-
   if (!manager) {
-    showToast('Выберите ответственного', 'info');
+    showToast('Выберите менеджера', 'info');
     return;
   }
-
-  showToast(`Карточка отправлена ${manager} на проверку`, 'success');
-}
-
-// ========== INTERNSHIP ==========
-function moveToInternship() {
-  if (!currentContractor) return;
-
-  currentContractor.status = 'Стажировка';
-  currentContractor.managerTask = 'Назначить наставника и стажировочную задачу';
-
-  showToast('Подрядчик перенесён в «Стажировка»', 'success');
-  renderModal(currentContractor);
-  applyFilters();
+  showToast(`Отправлено ${manager}`, 'success');
 }
 
 // ========== TOAST ==========
@@ -2352,8 +2489,11 @@ function showToast(message, type = 'info') {
 }
 
 // ========== INIT ==========
-lucide.createIcons();
-renderTable(contractors);
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  lucide.createIcons();
+  renderTable(contractors);
+});
 </script>
 
 </body>
